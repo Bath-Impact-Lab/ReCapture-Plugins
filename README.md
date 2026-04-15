@@ -28,11 +28,13 @@ Plugins operate as independent units with a defined interface.
 
 Each plugin follows a standard layout:
 
+```text
 plugin-name/
 ├── plugin.py        # Entry point
 ├── config.json      # Plugin configuration
 ├── requirements.txt # Optional dependencies
-└── README.md        # Plugin-specific docs
+└── README.md        #```text Plugin-specific docs
+```
 
 ---
 
