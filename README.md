@@ -33,7 +33,7 @@ plugin-name/
 ├── plugin.py        # Entry point
 ├── config.json      # Plugin configuration
 ├── requirements.txt # Optional dependencies
-└── README.md        #Plugin-specific docs
+└── README.md        # Plugin-specific docs
 ```
 
 ---
