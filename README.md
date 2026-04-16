@@ -1,4 +1,4 @@
-# ReCapture Plugins
+![ReCapture Plugins](documentation/github_banner.png)
 
 Plugin ecosystem for extending **ReCapture** with custom processing, analytics, and integrations.
 
