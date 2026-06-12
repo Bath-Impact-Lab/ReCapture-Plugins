@@ -1,0 +1,15 @@
+{
+  "plugin_id": "logan_wade_university_of_bath.sit_to_stand",
+  "author": "Logan Wade",
+  "institution": "University of Bath",
+  "movement": "sit_to_stand",
+  "description": "Sit-to-stand segmentation, scalar metrics, joint angle outputs, and time-normalised sit-to-stand waveforms.",
+  "entry_points": {
+    "analysis": "sit_to_stand_analysis.sit_to_stand_analysis",
+    "segmentation": "sit_to_stand_results.segment_sit_to_stand",
+    "results": "sit_to_stand_results.Outputs"
+  },
+  "assets": {
+    "directory": "assets"
+  }
+}

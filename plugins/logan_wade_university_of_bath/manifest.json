@@ -1,0 +1,12 @@
+{
+  "author_id": "logan_wade_university_of_bath",
+  "author_name": "Logan Wade",
+  "institution": "University of Bath",
+  "plugins": [
+    "cycling",
+    "gait",
+    "jump",
+    "rowing",
+    "sit_to_stand"
+  ]
+}

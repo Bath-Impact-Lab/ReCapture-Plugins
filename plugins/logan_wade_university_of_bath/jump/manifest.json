@@ -1,0 +1,15 @@
+{
+  "plugin_id": "logan_wade_university_of_bath.jump",
+  "author": "Logan Wade",
+  "institution": "University of Bath",
+  "movement": "jump",
+  "description": "Jump segmentation, scalar jump metrics, joint angle outputs, and time-normalised jump waveforms.",
+  "entry_points": {
+    "analysis": "jump_analysis.jump_analysis",
+    "segmentation": "jump_results.segment_jump",
+    "results": "jump_results.Outputs"
+  },
+  "assets": {
+    "directory": "assets"
+  }
+}

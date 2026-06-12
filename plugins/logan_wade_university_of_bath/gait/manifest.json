@@ -1,0 +1,17 @@
+{
+  "plugin_id": "logan_wade_university_of_bath.gait",
+  "author": "Logan Wade",
+  "institution": "University of Bath",
+  "movement": "gait",
+  "description": "Gait event detection, temporospatial metrics, joint angle outputs, and graph-schema export.",
+  "entry_points": {
+    "analysis": "gait_analysis.gait_analysis",
+    "segmentation": "gait_results.segment_gait",
+    "results": "gait_results.Outputs",
+    "raw_output_export": "gait_results.save_outputs",
+    "graph_export": "gait_graph_export.export_gait_graph_payload"
+  },
+  "assets": {
+    "directory": "assets"
+  }
+}

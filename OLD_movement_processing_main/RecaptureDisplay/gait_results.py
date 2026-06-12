@@ -14,8 +14,15 @@ from scipy.interpolate import interp1d
 import numpy as np
 import os
 import sys
+import json
+import pickle
 from time import perf_counter
-sys.path.append('../')
+
+RECAPTURE_PLUGINS_ROOT = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..', '..')
+)
+if RECAPTURE_PLUGINS_ROOT not in sys.path:
+    sys.path.insert(0, RECAPTURE_PLUGINS_ROOT)
 
 try:
     from ..ActivityAnalyses.gait_analysis import gait_analysis
@@ -190,6 +197,49 @@ def Outputs(gait, events=None):
 
     return Outcome_Measures
 
+
+def save_outputs(outcome_measures, output_path, export_format='pickle'):
+    """
+    Save raw gait result outputs for later graph export or pipeline use.
+
+    This function is intentionally separate from Outputs() so the analysis code
+    remains side-effect free by default. Use pickle for internal Python handoff,
+    especially while outputs still contain NumPy arrays. JSON is available for
+    simple inspection/debugging and converts NumPy values to Python lists.
+    """
+    export_format = export_format.lower()
+    output_path = os.fspath(output_path)
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+
+    if export_format in ['pickle', 'pkl']:
+        with open(output_path, 'wb') as file:
+            pickle.dump(outcome_measures, file)
+    elif export_format == 'json':
+        with open(output_path, 'w') as file:
+            json.dump(_to_json_serialisable(outcome_measures), file, indent=2)
+    else:
+        raise ValueError(
+            "export_format must be one of: 'pickle', 'pkl', or 'json'.")
+
+    return output_path
+
+
+def _to_json_serialisable(value):
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, dict):
+        return {
+            str(key): _to_json_serialisable(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_to_json_serialisable(item) for item in value]
+    return value
+
 def compute_pelTrunk(gait):
     metrics = gait.compute_pelvis_trunk_metrics()
     # Define units.
@@ -338,20 +388,41 @@ def compute_AngleGraphs(gait, events):
 # %% Run Main
 if __name__ == "__main__":
 
-    data_folder = r'C:\Users\lw2175\Dropbox\University\Bath\BioCV\LocalCap\Data\Pilot\Data\LW5\Data'
-    session_id = 'subject0_Session0'
-    trial_name = 'Session4_beginning'
+    fullpath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Kinematics\P02_walkPref.mot'
+    modelPath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Model\LaiUhlrich2022_scaled.osim'
+    trcFilePath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\MarkerData\P02_walkPref.trc'
+    export_format = 'pickle'
     leg = 'r'
     gaitStyle = 'treadmill' #'treadmill or 'auto'
+    
+    session_dir = os.path.dirname(fullpath)
+    trial_name = os.path.splitext(os.path.basename(fullpath))[0]
+    output_path = os.path.join(session_dir, f'{trial_name}_gait_outputs.pkl')
 
     # set up gait class.
-    gait = segment_gait(session_id, trial_name, data_folder, leg, gaitStyle=gaitStyle)
+    gait = segment_gait(
+        session_dir,
+        trial_name,
+        modelPath,
+        trcFilePath,
+        gaitStyle=gaitStyle,
+        leg=leg,
+        visualize=False,
+        pause_after_visualization=False,
+        trial_label=trial_name
+    )
 
     # create new events metric which includes [HS, TO, HS] for both legs (instead of just ipsilateral)
     events = gait.get_gait_events()
 
     # Output Results
     Outcome_Measures = Outputs(gait, events)
+    saved_path = save_outputs(
+        Outcome_Measures,
+        output_path,
+        export_format=export_format
+    )
+    print(f'Saved gait outputs to: {saved_path}')
 
     # Step lengths - Left and right step lengths
     # Veloctiy - outputs a single velocity measure for each trial (average of each step)

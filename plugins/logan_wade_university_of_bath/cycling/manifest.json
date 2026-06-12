@@ -1,0 +1,15 @@
+{
+  "plugin_id": "logan_wade_university_of_bath.cycling",
+  "author": "Logan Wade",
+  "institution": "University of Bath",
+  "movement": "cycling",
+  "description": "Ergometer cycling segmentation, scalar metrics, joint angle outputs, and time-normalised cycling waveforms.",
+  "entry_points": {
+    "analysis": "ergo_cycling_analysis.ergo_cycling_analysis",
+    "segmentation": "ergo_cycling_results.segment_cycling",
+    "results": "ergo_cycling_results.Outputs"
+  },
+  "assets": {
+    "directory": "assets"
+  }
+}

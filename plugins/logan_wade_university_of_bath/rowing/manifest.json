@@ -1,0 +1,15 @@
+{
+  "plugin_id": "logan_wade_university_of_bath.rowing",
+  "author": "Logan Wade",
+  "institution": "University of Bath",
+  "movement": "rowing",
+  "description": "Ergometer rowing segmentation, scalar metrics, joint angle outputs, and time-normalised rowing waveforms.",
+  "entry_points": {
+    "analysis": "ergo_rowing_analysis.ergo_rowing_analysis",
+    "segmentation": "ergo_rowing_results.segment_rowing",
+    "results": "ergo_rowing_results.Outputs"
+  },
+  "assets": {
+    "directory": "assets"
+  }
+}
