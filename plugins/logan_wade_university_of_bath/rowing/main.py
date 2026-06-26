@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Basic results wrapper for ergometer rowing trials.
+
+TODO: Update this results script to match the graph schema now used by
+gait_results.py. Outputs should be reorganised into schema-compatible
+Temporospatial, jointAngle_discrete, and jointAngle_timeseries-style
+sections before this plugin is used by the graphing package.
 """
 
 import os

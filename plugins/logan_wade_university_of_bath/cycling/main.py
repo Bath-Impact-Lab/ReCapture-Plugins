@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Basic results wrapper for sit-to-stand trials.
+Basic results wrapper for ergometer cycling trials.
+
+TODO: Update this results script to match the graph schema now used by
+gait_results.py. Outputs should be reorganised into schema-compatible
+Temporospatial, jointAngle_discrete, and jointAngle_timeseries-style
+sections before this plugin is used by the graphing package.
 """
 
 import os
 import sys
 from time import perf_counter
-import numpy as np
 
 RECAPTURE_PLUGINS_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', '..', '..')
@@ -15,36 +19,38 @@ if RECAPTURE_PLUGINS_ROOT not in sys.path:
     sys.path.insert(0, RECAPTURE_PLUGINS_ROOT)
 
 try:
-    from .sit_to_stand_analysis import sit_to_stand_analysis
+    from .ergo_cycling_analysis import ergo_cycling_analysis
 except ImportError:
-    from sit_to_stand_analysis import sit_to_stand_analysis
+    from ergo_cycling_analysis import ergo_cycling_analysis
+
+from recapture_core.events.segment_events import build_cycle_segment_events
 
 
-def segment_sit_to_stand(fpath, fname, modelPath, trcFilePath,
-                         trunk_signal='lumbar_extension', visualize=False,
-                         pause_after_visualization=False, trial_label=None):
+def segment_cycling(fpath, fname, modelPath, trcFilePath, side='auto',
+                    cycle_signal='foot_center_vertical', visualize=False,
+                    pause_after_visualization=False, trial_label=None):
 
-    sts = sit_to_stand_analysis(
+    cycling = ergo_cycling_analysis(
         fpath, fname, modelPath, trcFilePath,
-        trunk_signal=trunk_signal,
+        side=side, n_cycles=-1, cycle_signal=cycle_signal,
         visualize=visualize,
         pause_after_visualization=pause_after_visualization,
         trial_label=trial_label)
 
-    return sts
+    return cycling
 
 
-def Outputs(sts, events=None):
+def Outputs(cycling, events=None):
     outputs_start = perf_counter()
 
     if events is None:
-        events = sts.get_sit_to_stand_events()
+        events = cycling.get_cycle_events()
 
     def print_block_timing(label, start):
         print(f"[timing] Outputs {label}: {perf_counter() - start:.3f}s")
 
     Outcome_Measures = {
-        'Sit_To_Stand': {},
+        'Cycling': {},
         'Angle_Results': {
             'Ankle': {}, 'Knee': {}, 'Hip': {},
             'Pelvis': {}, 'Trunk': {}, 'Shoulder': {}, 'Elbow': {}
@@ -55,51 +61,35 @@ def Outputs(sts, events=None):
     }
 
     block_start = perf_counter()
-    Outcome_Measures['Sit_To_Stand']['Cycle_Count'] = {
-        'value': sts.get_sit_to_stand_count(),
+    cycle_counts = cycling.get_cycle_counts()
+    Outcome_Measures['Cycling']['Cycle_Count'] = {
+        'LR': cycle_counts,
         'units': 'cycles',
-        'description': 'Number of detected full sit-stand-sit cycles in the trial.'
+        'description': 'Number of detected cycling revolutions for each side using surrogate top-dead-centre events from the foot-centre vertical signal.'
     }
 
-    full_cycle_duration, full_cycle_units = sts.compute_full_cycle_duration(return_all=True)
-    Outcome_Measures['Sit_To_Stand']['Full_Cycle_Duration'] = {
-        'value': full_cycle_duration,
-        'mean': float(full_cycle_duration.mean()),
-        'units': full_cycle_units,
-        'description': 'Duration from sitting start to sitting end for each full sit-stand-sit cycle.'
+    cadence_values, cadence_units = cycling.compute_cadence_by_side(return_all=True)
+    Outcome_Measures['Cycling']['Cadence'] = {
+        'LR': cadence_values,
+        'units': cadence_units,
+        'description': 'Cycling cadence estimated from consecutive surrogate top-dead-centre events for each side.'
     }
 
-    sit_to_stand_duration, sit_to_stand_units = sts.compute_sit_to_stand_duration(return_all=True)
-    Outcome_Measures['Sit_To_Stand']['Sit_To_Stand_Duration'] = {
-        'value': sit_to_stand_duration,
-        'mean': float(sit_to_stand_duration.mean()),
-        'units': sit_to_stand_units,
-        'description': 'Duration from sitting start to standing start.'
+    cycle_duration_values, cycle_duration_units = cycling.compute_cycle_duration_by_side(return_all=True)
+    Outcome_Measures['Cycling']['Cycle_Duration'] = {
+        'LR': cycle_duration_values,
+        'units': cycle_duration_units,
+        'description': 'Duration of each detected cycling revolution for each side.'
     }
-
-    standing_duration, standing_units = sts.compute_standing_duration(return_all=True)
-    Outcome_Measures['Sit_To_Stand']['Standing_Duration'] = {
-        'value': standing_duration,
-        'mean': float(standing_duration.mean()),
-        'units': standing_units,
-        'description': 'Duration from standing start to standing end.'
-    }
-
-    stand_to_sit_duration, stand_to_sit_units = sts.compute_stand_to_sit_duration(return_all=True)
-    Outcome_Measures['Sit_To_Stand']['Stand_To_Sit_Duration'] = {
-        'value': stand_to_sit_duration,
-        'mean': float(stand_to_sit_duration.mean()),
-        'units': stand_to_sit_units,
-        'description': 'Duration from standing end to sitting end.'
-    }
-    print_block_timing('sit-to-stand scalars', block_start)
+    print_block_timing('cycling scalars', block_start)
 
     block_start = perf_counter()
-    Outcome_Measures['Segment_Events'] = build_sit_to_stand_segment_events(events)
-    print_block_timing('sit-to-stand events', block_start)
+    Outcome_Measures['Segment_Events'] = build_cycle_segment_events(
+        events, task='cycling', segment_label='Revolution')
+    print_block_timing('cycle events', block_start)
 
     block_start = perf_counter()
-    outputAngles = compute_angleOutputs(sts)
+    outputAngles = compute_angleOutputs(cycling)
     Outcome_Measures['Angle_Results']['Ankle'] = outputAngles['ankle']
     Outcome_Measures['Angle_Results']['Knee'] = outputAngles['knee']
     Outcome_Measures['Angle_Results']['Hip'] = outputAngles['hip']
@@ -110,37 +100,18 @@ def Outputs(sts, events=None):
     print_block_timing('angle outputs', block_start)
 
     block_start = perf_counter()
-    Outcome_Measures['Time_Normalized_Coordinates'] = sts.get_coordinates_normalized_time()
+    Outcome_Measures['Time_Normalized_Coordinates'] = cycling.get_coordinates_normalized_time()
     print_block_timing('time-normalized coordinates', block_start)
 
     block_start = perf_counter()
-    Outcome_Measures['Angle_Graphs'] = compute_AngleGraphs(sts)
+    Outcome_Measures['Angle_Graphs'] = compute_AngleGraphs(cycling)
     print_block_timing('angle graphs', block_start)
 
     print_block_timing('total', outputs_start)
     return Outcome_Measures
 
 
-def build_sit_to_stand_segment_events(events):
-    event_sets = {
-        'sit_stand_full': {
-            'Segment_Idx': np.asarray(events['eventIdx']),
-            'Segment_Time': np.asarray(events['eventTime']),
-            'Event_Names': list(events.get('eventNames', [])),
-            'Event_Side': 'bilateral'
-        }
-    }
-
-    return {
-        'schema_version': 1,
-        'task': 'sit_to_stand',
-        'segment_label': 'Sit-to-Stand',
-        'default_event_set': 'sit_stand_full',
-        'event_sets': event_sets
-    }
-
-
-def compute_angleOutputs(sts):
+def compute_angleOutputs(cycling):
     joint_groups = {
         'ankle': ['ankle'],
         'knee': ['knee'],
@@ -166,15 +137,8 @@ def compute_angleOutputs(sts):
         'elbow': 'elbow'
     }
 
-    rawAngles = sts.compute_angle_outputs()
+    rawAngles = cycling.compute_angle_outputs()
     outputAngles = {group: {} for group in joint_groups}
-
-    event_names = [
-        'SittingEnd',
-        'StandingStart',
-        'StandingEnd',
-        'SittingStart'
-    ]
 
     for group_name, joint_names in joint_groups.items():
         for joint_name in joint_names:
@@ -182,17 +146,17 @@ def compute_angleOutputs(sts):
             for key in outputAngles[group_name][joint_name]:
                 outputAngles[group_name][joint_name][key]['units'] = 'deg'
                 if key == 'ROM':
-                    description = f'Range of motion of the {joint_labels[joint_name]} over the sit-to-stand window.'
-                elif key in event_names:
-                    description = f'{key}: Joint angle of the {joint_labels[joint_name]} at the {key.lower()} event.'
+                    description = f'Range of motion of the {joint_labels[joint_name]} over one cycling revolution.'
+                elif key in ['TDC', 'BDC']:
+                    description = f'{key}: Joint angle of the {joint_labels[joint_name]} at surrogate {"top-dead-centre" if key == "TDC" else "bottom-dead-centre"}.'
                 else:
-                    description = f'{key} of the {joint_labels[joint_name]} over the sit-to-stand window.'
+                    description = f'{key} of the {joint_labels[joint_name]} over one cycling revolution.'
                 outputAngles[group_name][joint_name][key]['description'] = description
 
     return outputAngles
 
 
-def compute_AngleGraphs(sts):
+def compute_AngleGraphs(cycling):
     graph_groups = {
         'ankle': ['ankle'],
         'knee': ['knee'],
@@ -203,7 +167,7 @@ def compute_AngleGraphs(sts):
         'elbow': ['elbow']
     }
 
-    raw_graphs = sts.compute_angle_graphs()
+    raw_graphs = cycling.compute_angle_graphs()
     angle_graphs = {}
 
     for group_name, joint_names in graph_groups.items():
