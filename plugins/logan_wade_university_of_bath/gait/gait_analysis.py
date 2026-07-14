@@ -643,7 +643,10 @@ class gait_analysis(kinematics):
                               self.gaitEvents['ipsilateralIdx'][:,0] +
                               self.gaitEvents['ipsilateralIdx'][:,2]-
                               self.gaitEvents['contralateralIdx'][:,1])
-        
+
+        # print("DEBUG: logging self.gaitEvents['ipsilateralIdx']")
+        # print(self.gaitEvents['ipsilateralIdx'])
+
         midstanceIdx_ips = [range(self.gaitEvents['ipsilateralIdx'][i,0] + 
                                   int(np.round(.4*ips_stance_length[i])),
                                   self.gaitEvents['ipsilateralIdx'][i,0] + 

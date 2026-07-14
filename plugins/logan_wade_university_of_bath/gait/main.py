@@ -958,6 +958,8 @@ def compute_joint_angle_timeseries(gait, events):
 
 # %% Run Main
 if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        print("yeah got some command line arguments")
 
     fullpath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Kinematics\P02_walkPref.mot'
     modelPath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Model\LaiUhlrich2022_scaled.osim'
@@ -967,8 +969,14 @@ if __name__ == "__main__":
     gaitStyle = 'treadmill' #'treadmill or 'auto'
     participant_name = 'P02'
     session_name = 'opencap'
+
+    # mot file
+    fullpath = sys.argv[4]
+    modelPath = sys.argv[2]
+    trcFilePath = sys.argv[3]
+    session_dir = sys.argv[1]
     
-    session_dir = os.path.dirname(fullpath)
+    # session_dir = os.path.dirname(fullpath)
     trial_name = os.path.splitext(os.path.basename(fullpath))[0]
     output_path = os.path.join(session_dir, f'{trial_name}_gait_graphs.json')
 
