@@ -959,18 +959,42 @@ def compute_joint_angle_timeseries(gait, events):
 # %% Run Main
 if __name__ == "__main__":
 
-    fullpath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Kinematics\P02_walkPref.mot'
-    modelPath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Model\LaiUhlrich2022_scaled.osim'
-    trcFilePath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\MarkerData\P02_walkPref.trc'
-    export_format = 'json'
-    leg = 'r'
-    gaitStyle = 'treadmill' #'treadmill or 'auto'
-    participant_name = 'P02'
-    session_name = 'opencap'
+    # fullpath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Kinematics\P02_walkPref.mot'
+    # modelPath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\OpenSimData\Model\LaiUhlrich2022_scaled.osim'
+    # trcFilePath = r'C:\Users\z3550257\Dropbox\University\2_Bath\ReCapture\ReCapture_Release_Paper\Data\ValidationData\opencap\P02\MarkerData\P02_walkPref.trc'
+    # export_format = 'json'
+    # leg = 'r'
+    # gaitStyle = 'treadmill' #'treadmill or 'auto'
+    # participant_name = 'P02'
+    # session_name = 'opencap'
     
-    session_dir = os.path.dirname(fullpath)
+    # session_dir = os.path.dirname(fullpath)
+    # trial_name = os.path.splitext(os.path.basename(fullpath))[0]
+    # output_path = os.path.join(session_dir, f'{trial_name}_gait_graphs.json')
+    if len(sys.argv) < 5:
+        raise ValueError(
+            "Usage: python main.py <session_dir> <modelPath> <trcFilePath> <motFile>"
+        )
+
+    print("Running from command line")
+
+    # Read command line arguments
+    session_dir = sys.argv[1]
+    modelPath = sys.argv[2]
+    trcFilePath = sys.argv[3]
+    fullpath = sys.argv[4]
+
+    export_format = "json"
+    leg = "r"
+    gaitStyle = "treadmill"
+    participant_name = "P02"
+    session_name = "opencap"
+
     trial_name = os.path.splitext(os.path.basename(fullpath))[0]
-    output_path = os.path.join(session_dir, f'{trial_name}_gait_graphs.json')
+    output_path = os.path.join(
+        session_dir,
+        f"{trial_name}_gait_graphs.json"
+    )
 
     # set up gait class.
     gait = segment_gait(

@@ -17,3 +17,17 @@ plugins/logan_wade_university_of_bath/jump/__pycache__/jump_results.cpython-311.
 plugins/logan_wade_university_of_bath/jump/__pycache__/jump_results.cpython-311.pyc
 plugins/logan_wade_university_of_bath/rowing/__pycache__/ergo_rowing_results.cpython-311.pyc
 plugins/logan_wade_university_of_bath/sit_to_stand/__pycache__/sit_to_stand_results.cpython-311.pyc
+.spyproject/config/codestyle.ini
+.spyproject/config/defaults/defaults-codestyle-0.2.0.ini
+.spyproject/config/defaults/defaults-encoding-0.2.0.ini
+.spyproject/config/defaults/defaults-vcs-0.2.0.ini
+.spyproject/config/defaults/defaults-workspace-0.2.0.ini
+.spyproject/config/encoding.ini
+.spyproject/config/vcs.ini
+.spyproject/config/workspace.ini
+plugins/logan_wade_university_of_bath/gait/__pycache__/gait_analysis.cpython-311.pyc
+plugins/logan_wade_university_of_bath/gait/__pycache__/segment_events.cpython-311.pyc
+recapture_core/__pycache__/__init__.cpython-311.pyc
+recapture_core/utils/__pycache__/__init__.cpython-311.pyc
+recapture_core/utils/__pycache__/general.cpython-311.pyc
+recapture_core/utils/__pycache__/processing.cpython-311.pyc
