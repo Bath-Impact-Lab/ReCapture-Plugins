@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title":"measure spec",
+  "description": "A specification for describing a measure",
+  "properties": {
+    "ignored": {
+      "type": "object",
+      "description": "Any properties in this section are not meant to be show to the end user of recapture. They are for use within the internals of recapture. Example below.",
+      "properties": {
+        "videoSyncEvents": {
+          "type": "object",
+          "description": "Contains timestamps for use in synchronising videos. For instance, in gait analysis, it would contain the timestamps of each heel strike, the delimiter of strides. Such time stamps can be separated into left, right, or center.",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "l": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "r": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "center": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": ["name"]
+        }
+      },
+      "required": ["videoSyncEvents"]
+    }
+  },
+  "additionalProperties": {
+    "type": "object",
+    "additionalProperties": {
+      "type": "object",
+      "properties":{
+        "singleCenter": {
+          "title": "The raw data for this measure",
+          "description": "Contains the data for this measure. It is a simple 1D array in which each number is corresponds to a event window. Will be plotted as a box plot.",
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "singleLeftRight": {
+          "title": "The raw data for this measure",
+          "description": "contains the left-right data for this measure. Left is under l and right under r. Each is a 1D array in which each number is the value for a event window. Will be plotted as a box plot.",
+          "type": "object",
+          "properties": {
+            "l": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "r": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "required": ["l", "r"]
+        },
+        "multiCenter": {
+          "title": "The raw data for this measure",
+          "description": "Contains the data for this measure. It is a N by M 2D array in which N is the number of datapoints per event and M is the number of event windows. Will be plotted as a line plot.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "multiLeftRight": {
+          "title": "The raw data for this measure",
+          "description": "Contains the left-right data for this measure. Left is under l and right under r. Each is a N by M 2D array in which N is the number of datapoints per event and M is the number of event windows. Will be plotted as a line plot.",
+          "type": "object",
+          "properties": {
+            "l": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "r": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "required": ["l", "r"]
+        },
+        "units": {
+          "title": "The units to be placed on the axes. In the case that this is a box plot, the X axis will be ignored.",
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                }
+              }
+            },
+            "y": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": ["y"]
+        },
+        "description": {
+          "title": "the description of the measure",
+          "type": "string"
+        },
+        "tags": {
+          "title": "Tags to place on the axes.",
+          "description": "Such tags can be a string with an optional image, and they can be placed at the start, end or arbitrary position of either axis. Only tags on the Y axis will be placed on box plots.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "axis": {
+                "type": "string",
+                "enum": ["x", "y"]
+              },
+              "text": {
+                "type": "string"
+              },
+              "image": {
+                "type": "string"
+              },
+              "position": {
+                "type": "string",
+                "pattern": "start|end|^\\d{1,2}(\\.\\d+)?%$|^(-?[0-9])+(\\.\\d+)?$",
+                "description": "expexted either 'start', 'end', a percent value, or an absolute number value. These will be placed at the start, end, partway through, and at that exact position (if it's on the graph) respectively."
+              }
+            },
+            "required": ["axis", "text", "position"]
+          }
+        },
+        "verticalLines": {
+          "title": "Vertical lines to be placed on the graph. Does not apply to box plots.",
+          "description": "For instance, toe-off position. Vertical lines will be placed at the given value, as long as said value is visible on the X axis. Each line has a list of numbers, one for each stride.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": ["value", "label"]
+          }
+        },
+        "seriesName": {
+          "title": "The name of the series displayed either under a box plot or in the legend of a line plot.",
+          "description": "In the case that this is a box plot, this is the name which will be displayed under the series on the X axis. In the case that this is a line plot, this is the name which will be displayed in the legend for this series.",
+          "type": "string"
+        }
+      },
+      "required": ["units", "description"]
+    }
+  },
+  "required": ["ignored"]
+}

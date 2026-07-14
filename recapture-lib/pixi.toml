@@ -1,0 +1,32 @@
+[workspace]
+authors = ["Max Ashton <92784885+kestrel84@users.noreply.github.com>"]
+channels = ["conda-forge", "opensim-org"]
+name = "recapture-graph-thingy"
+platforms = ["win-64", "linux-64"]
+version = "0.1.0"
+
+[tasks]
+validate = "python ./src/validation_example.py"
+
+[dependencies]
+opensim = ">=4.5.2,<5"
+jsonschema = ">=4.26.0,<5"
+
+[feature.recapture-opensim]
+channels = ["main",  "msys2", "conda-forge", "opensim-org"]
+
+[feature.recapture-opensim.dependencies]
+python = "3.11.*"
+opensim = "*"
+pandas = "*"
+scipy = "*"
+matplotlib = "*"
+spyder-kernels = "*"
+requests = "*"
+pyyaml = "*"
+natsort = "*"
+statsmodels = "*"
+jsonschema = "*"
+
+[environments]
+recapture-opensim = { features = ["recapture-opensim"], no-default-feature = true }
