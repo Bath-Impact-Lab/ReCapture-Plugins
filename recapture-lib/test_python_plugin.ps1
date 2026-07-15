@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$Path
+    [string]$Path,
+    [switch]$ocap
 )
 
 Write-Host "Testing if path is a directory...              " -NoNewline
@@ -60,12 +61,22 @@ if (!$pixiFound) {
 }
 
 Write-Host "Running plugin using pixi"
-Write-Host ""
 
-$trialDir = Join-Path $PSScriptRoot "example-session/walk"
-$osimPath = Join-Path $PSScriptRoot "example-session/models/LaiUhlrich2022_scaled.osim"
-$trcPath = Join-Path $PSScriptRoot "example-session/walk/P06_walkPref.trc"
-$motPath = Join-Path $PSScriptRoot "example-session/walk/P06_walkPref.mot"
+if ($ocap)
+{
+    Write-Host "Using a more opencap-like folder structure"
+    $trialDir = Join-Path $PSScriptRoot "example-session-2/opencap/P02/OpenSimData/Kinematics"
+    $osimPath = Join-Path $PSScriptRoot "example-session-2/opencap/P02/OpenSimData/Model/LaiUhlrich2022_scaled.osim"
+    $trcPath = Join-Path $PSScriptRoot "example-session-2/opencap/P02/MarkerData/P06_walkPref.trc"
+    $motPath = Join-Path $PSScriptRoot "example-session-2/opencap/P02/OpenSimData/Kinematics/P06_walkPref.mot"
+} else {
+    $trialDir = Join-Path $PSScriptRoot "example-session/walk"
+    $osimPath = Join-Path $PSScriptRoot "example-session/models/LaiUhlrich2022_scaled.osim"
+    $trcPath = Join-Path $PSScriptRoot "example-session/walk/P06_walkPref.trc"
+    $motPath = Join-Path $PSScriptRoot "example-session/walk/P06_walkPref.mot"
+}
+
+Write-Host ""
 
 $outputPath = Join-Path $trialDir "spec.json"
 
