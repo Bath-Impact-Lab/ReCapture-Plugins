@@ -78,7 +78,7 @@ if ($ocap)
 
 Write-Host ""
 
-$outputPath = Join-Path $trialDir "spec.json"
+$outputPath = Join-Path $trialDir "*gait_graphs.json"
 
 # check and delete existing spec.json
 if (Test-Path -Path $outputPath) {
@@ -98,9 +98,13 @@ Invoke-Expression $command
 # Write-Host $pluginOutput
 # Write-Host ""
 
+Write-Host ""
+Write-Host "Done." -ForegroundColor Green
+
 If (!(Test-Path -Path $outputPath)) {
-    Write-Host ""
     Write-Host "Error: The plugin did not output a spec file in the required location." -ForegroundColor Red
     Write-Host "    The expected location is $outputPath"
     exit 1
+} else {
+    Write-Host "Plugin ran successfully and outputted a valid spec file." -ForegroundColor Green
 }

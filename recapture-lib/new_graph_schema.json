@@ -199,6 +199,5 @@
       },
       "required": ["units", "description"]
     }
-  },
-  "required": ["ignored"]
+  }
 }
