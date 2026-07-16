@@ -646,6 +646,14 @@ class gait_analysis(kinematics):
 
         # print("DEBUG: logging self.gaitEvents['ipsilateralIdx']")
         # print(self.gaitEvents['ipsilateralIdx'])
+        # print("DEBUG: logging self.gaitEvents['ipsilateralIdx'][0]")
+        # print(self.gaitEvents['ipsilateralIdx'][0])
+        print("DEBUG: logging ips_stance_length")
+        print(ips_stance_length)
+        print("IMPORTANT: fixing ips_stance_length")
+        ips_stance_length = [item[0] for item in ips_stance_length]
+        print("ips_stance_length after fixing")
+        print(ips_stance_length)
 
         midstanceIdx_ips = [range(self.gaitEvents['ipsilateralIdx'][i,0] + 
                                   int(np.round(.4*ips_stance_length[i])),
