@@ -783,19 +783,28 @@ def build_graph_payload(outcome_measures):
 
 
 def default_graph_schema_path():
-    return os.path.join(
-        os.path.expanduser('~'),
-        'Dropbox', 'University', 'GitHubClones', 'ReCapture-IRIS',
-        'recapture-lib', 'new_graph_schema.json'
-    )
+    # return os.path.join(
+    #     os.path.expanduser('~'),
+    #     'Dropbox', 'University', 'GitHubClones', 'ReCapture-IRIS',
+    #     'recapture-lib', 'new_graph_schema.json'
+    # )
+    print(os.getcwd())
+    return os.path.join(os.getcwd(), "new_graph_schema.json")
 
 
 def validate_graph_payload(payload, schema_path=None):
     schema_path = schema_path or default_graph_schema_path()
     with open(schema_path, 'r') as file:
         schema = json.load(file)
-    jsonschema.validate(instance=payload, schema=schema)
-    return True
+
+    try:
+        jsonschema.validate(instance=payload, schema=schema)
+        print(f"done validating.")
+        return True
+    except jsonschema.exceptions.ValidationError as e:
+        print(f"json schema validation failed with error {e}.")
+        return False
+
 
 def _to_json_serialisable(value):
     if isinstance(value, np.ndarray):
