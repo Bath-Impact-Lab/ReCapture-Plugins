@@ -21,7 +21,7 @@ plugin-name/
 ├── README.md      # Plugin-specific docs
 └── Any other folders or files
 ```
-The plugin _must_ be contained within a single folder and it _must_ have a file in it called `main.py` which is the entry point of the plugin.
+The plugin _must_ be contained within a single folder, and it _must_ have a file in it called `main.py` which is the entry point of the plugin.
 Other python files can be used as part of the script, within those restrictions.
 
 ---
@@ -39,7 +39,7 @@ All these inputs are for one specific trial.
 
 Assumptions about the structure of the trial directory and locations of files within it should be kept to an absolute minimum; prefer using the given paths.
 
-These will be given in the manner of command-line arguments - for an example:
+These will be given using command-line arguments - for an example:
 ```powershell
 python 
     C:\Users\Max\Code\Recapture-IRIS\recapture-lib\main.py 
@@ -57,9 +57,9 @@ For instance, `sys.argv[2]` would be `C:\Users\Max\Code\Recapture-Plugins\recapt
 #### Outputs
 - The python script must create a JSON file within the root directory of the trial.
 - The name of the file must match `*_graphs.json`. That is, it must be `<some text>_graphs.json`; for example `gait_graphs.json` or `jump_graphs.json`. 
-- It _must_ follow the JSON schema given in [new_graph_schema.json](testing/new_graph_schema.json). If it does not, the graphs will render improperly or not at all.
+- It _must_ follow the JSON schema given in [new_graph_schema.json](../testing/new_graph_schema.json). If it does not, the graphs will render improperly or not at all.
 
-Instructions on how to validate your data structure and write to a json file can be found in [validation_example.py](testing/validation_example.py).
+Instructions on how to validate your data structure and write to a json file can be found in [validation_example.py](../testing/validation_example.py).
 
 ### Plugin environment
 The plugin will be run in an environment with the following packages:
@@ -75,6 +75,17 @@ The plugin will be run in an environment with the following packages:
 - statsmodels
 - jsonschema
 
-This environment can be replicated using conda or pixi, by copying [env.yaml](env.yaml) or [pixi.toml](pixi.toml) respectively. No guarantees can be made about the specific versions of packages other than python; contact the developers to resolve problems arising from package versions.
+This environment can be replicated using conda or pixi, by copying [env.yaml](../testing/env.yaml) or [pixi.toml](../testing/pixi.toml) respectively. No guarantees can be made about the specific versions of packages other than python; contact the developers to resolve problems arising from package versions.
 
 The plugin must have, in its root directory, a file called `main.py`. This will be used as the entry point of the plugin; if it does not have such a file, the plugin will not run. 
+
+### Plugin testing
+
+The plugin can be tested in two ways. The first is to pass the root directory of the plugin to the script [test_python_plugin.ps1](../testing/test_python_plugin.ps1) (in the testing directory), like this:
+```powershell
+./test_python_plugin.ps1 "C:\Users\Max\Code\Recapture-Plugins\plugins\logan_wade_university_of_bath\gait"
+```
+This will attempt to run the plugin on some sample data, and check that it outputs a JSON file in the correct place, but no more.
+
+The second way is to load it into the ReCapture Plugins directory (see the [README](../README.md) for more info) and select it when using the app. This is the only way to see the graphs.
+
