@@ -1,0 +1,37 @@
+{
+  "author_id": "roxy_buckley_uni_of_bath",
+  "author_name": "placeholder",
+  "institution": "University of Bath",
+  "plugins": [
+    { 
+      "name": "double_leg_jump",
+      "description": "A plugin for performing analysis on two-legged jumping motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "run",
+      "description": "A plugin for performing analysis on running motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "single_leg_jump_left",
+      "description": "A plugin for performing analysis on single-legged jumping motions, left side.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "single_leg_jump_right",
+      "description": "A plugin for performing analysis on single-legged jumping motions, right side.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "walk",
+      "description": "A plugin for performing analysis on walking motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    }
+  ]
+}

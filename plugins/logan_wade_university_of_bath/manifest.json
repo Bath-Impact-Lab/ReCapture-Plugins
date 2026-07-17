@@ -3,10 +3,35 @@
   "author_name": "Logan Wade",
   "institution": "University of Bath",
   "plugins": [
-    "cycling",
-    "gait",
-    "jump",
-    "rowing",
-    "sit_to_stand"
+    { 
+      "name": "cycling",
+      "description": "A plugin for performing analysis on cycling motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "gait",
+      "description": "A plugin for performing analysis on walking and running motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "jump",
+      "description": "A plugin for performing analysis on jumping motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "rowing",
+      "description": "A plugin for performing analysis on rowing motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    },
+    {
+      "name": "sit_to_stand",
+      "description": "A plugin for performing analysis on rowing motions.",
+      "version": "0.1.0",
+      "last_updated": "2026-07-17T10:12:35Z"
+    }
   ]
 }
