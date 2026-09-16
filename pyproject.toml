@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "recapture-biomechanics"
+version = "0.1.0.dev0"
+description = "Biomechanics analysis plugins for ReCapture V3"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+dependencies = [
+  "recapture-analysis>=0.1,<0.2",
+  "pydantic>=2.5,<3",
+  "numpy>=1.24",
+  "pandas>=2",
+  "scipy>=1.10",
+  "opensim>=4.5",
+  "matplotlib>=3.8",
+  "jsonschema>=4.20",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.4"]
+scientific = [
+  "numpy>=1.24",
+  "pandas>=2",
+  "scipy>=1.10",
+  "opensim>=4.5",
+]
+
+[project.entry-points."recapture.analysis"]
+bath-gait = "recapture_biomechanics.gait.entrypoint:run"
+bath-jump = "recapture_biomechanics.jump.entrypoint:run"
+bath-sit-to-stand = "recapture_biomechanics.sit_to_stand.entrypoint:run"
+bath-rowing = "recapture_biomechanics.rowing.entrypoint:run"
+bath-cycling = "recapture_biomechanics.cycling.entrypoint:run"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/recapture_biomechanics",
+  "recapture_core",
+  "plugins",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

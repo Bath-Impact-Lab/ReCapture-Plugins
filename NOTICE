@@ -1,0 +1,8 @@
+ReCapture Biomechanics
+Copyright (c) 2026 University of Bath
+
+Parts of the legacy processing code in this repository were derived from
+Stanford OpenCap processing code and retain their original Apache License 2.0
+headers. The new package skeleton does not yet redistribute those modules.
+When algorithms are migrated, their file-level notices and attribution must be
+preserved and this notice updated.

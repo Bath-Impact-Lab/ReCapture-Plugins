@@ -638,7 +638,10 @@ class gait_analysis(kinematics):
                 
         
         # Find indices of 40-60% of the stance phase
-        ips_stance_length = np.diff(self.gaitEvents['ipsilateralIdx'][:,(0,1)])
+        ips_stance_length = (
+            self.gaitEvents['ipsilateralIdx'][:, 1] -
+            self.gaitEvents['ipsilateralIdx'][:, 0]
+        )
         cont_stance_length = (self.gaitEvents['contralateralIdx'][:,0] - 
                               self.gaitEvents['ipsilateralIdx'][:,0] +
                               self.gaitEvents['ipsilateralIdx'][:,2]-

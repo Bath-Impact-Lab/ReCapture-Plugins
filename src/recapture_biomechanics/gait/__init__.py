@@ -1,0 +1,1 @@
+"""Bath gait analysis plugin."""

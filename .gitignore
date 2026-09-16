@@ -2,6 +2,8 @@
 __pycache__
 .pixi
 .spyproject
+.venv-test/
 
 # excludes the graph spec output of the scripts.
 **/example-session*/**/*.json
+*.pyc
